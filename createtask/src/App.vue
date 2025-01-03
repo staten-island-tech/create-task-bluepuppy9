@@ -290,7 +290,7 @@ function removeFromPizza(index) {
 }
 
 function getImageSrc(name) {
-  return `../public/${name.toLowerCase().replace(" ", "_")}.png`;
+  return `/${name.toLowerCase().replace(" ", "_")}.png`;
 }
 
 function startOrder() {
