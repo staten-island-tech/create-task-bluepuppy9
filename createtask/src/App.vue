@@ -21,18 +21,18 @@
           'text-gray-700 bg-yellow-300': timeLeft <= 15 && timeLeft > 5,
           'text-gray-700 bg-red-500': timeLeft <= 5,
         }"
+        class="w-32 text-center mb-5"
       >
         Time Left: {{ timeLeft.toFixed(1) }}s
       </div>
       <h1 class="text-3xl font-extrabold mb-4 text-center text-gray-800">
         Pizza Challenge Tycoon
       </h1>
-
       <div class="mb-6">
         <h2 class="text-xl font-semibold mb-2 text-gray-700">
           Pizza Order Challenge
         </h2>
-        <div class="flex justify-between gap-4">
+        <div class="flex mt-4 justify-between gap-4">
           <div class="w-3/4">
             <div
               class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2"
@@ -63,34 +63,71 @@
           >
             <h3 class="text-lg font-semibold text-gray-700">Current Order</h3>
             <p class="text-sm">
-              Crust: <span class="font-semibold">{{ currentOrder.crust }}</span>
+              Crust:
+              <span class="font-semibold">{{ currentOrder.crust }}</span>
+              <span v-if="isInInventoryOrPizza(currentOrder.crust)">✔️</span>
             </p>
             <p class="text-sm">
-              Sauce: <span class="font-semibold">{{ currentOrder.sauce }}</span>
+              Sauce:
+              <span class="font-semibold">{{ currentOrder.sauce }}</span>
+              <span v-if="isInInventoryOrPizza(currentOrder.sauce)">✔️</span>
             </p>
             <p class="text-sm">
               Toppings:
-              <span class="font-semibold">{{
-                currentOrder.toppings.join(", ") || "None"
-              }}</span>
+              <span
+                v-for="(topping, index) in currentOrder.toppings"
+                :key="topping"
+              >
+                <span class="font-semibold">{{ topping }}</span>
+                <span v-if="isInInventoryOrPizza(topping)">✔️</span>
+                <span v-if="index < currentOrder.toppings.length - 1">, </span>
+              </span>
+              <span
+                v-if="currentOrder.toppings.length === 0"
+                class="font-semibold"
+                >None</span
+              >
             </p>
             <p class="text-sm">
               Cheese:
               <span class="font-semibold">{{
                 currentOrder.cheese || "None"
               }}</span>
+              <span v-if="isInInventoryOrPizza(currentOrder.cheese)">✔️</span>
             </p>
             <p class="text-sm">
               Seasonings:
-              <span class="font-semibold">{{
-                currentOrder.seasonings.join(", ") || "None"
-              }}</span>
+              <span
+                v-for="(seasoning, index) in currentOrder.seasonings"
+                :key="seasoning"
+              >
+                <span class="font-semibold">{{ seasoning }}</span>
+                <span v-if="isInInventoryOrPizza(seasoning)">✔️</span>
+                <span v-if="index < currentOrder.seasonings.length - 1"
+                  >,
+                </span>
+              </span>
+              <span
+                v-if="currentOrder.seasonings.length === 0"
+                class="font-semibold"
+                >None</span
+              >
             </p>
             <p class="text-sm">
               Drizzles:
-              <span class="font-semibold">{{
-                currentOrder.drizzles.join(", ") || "None"
-              }}</span>
+              <span
+                v-for="(drizzle, index) in currentOrder.drizzles"
+                :key="drizzle"
+              >
+                <span class="font-semibold">{{ drizzle }}</span>
+                <span v-if="isInInventoryOrPizza(drizzle)">✔️</span>
+                <span v-if="index < currentOrder.drizzles.length - 1">, </span>
+              </span>
+              <span
+                v-if="currentOrder.drizzles.length === 0"
+                class="font-semibold"
+                >None</span
+              >
             </p>
             <button
               class="btn btn-primary mt-2 w-full py-1 text-sm font-semibold hover:bg-primary-dark transition"
@@ -427,6 +464,14 @@ function showSuccess(message) {
   setTimeout(() => {
     success.value = "";
   }, 3000);
+}
+
+function isInInventoryOrPizza(item) {
+  return (
+    inventory.value.some(
+      (ingredient) => ingredient.name === item && ingredient.quantity > 0
+    ) || pizza.value.some((ingredient) => ingredient.name === item)
+  );
 }
 
 onMounted(() => {
