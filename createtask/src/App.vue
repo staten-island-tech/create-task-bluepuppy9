@@ -171,6 +171,9 @@
               :style="{ transform: `rotate(${ingredient.rotation}deg)` }"
               class="absolute w-full h-full object-cover rounded-lg"
             />
+            <!-- You can find images sourced from online at the following link: 
+             https://www.vecteezy.com/vector-art/25901588-ready-made-pizza-dough-with-tomato-sauce-and-cheese-about-picking-pizza-preparing-pizza-dough-vector-cartoon
+             -->
           </div>
         </div>
       </div>
