@@ -379,18 +379,25 @@ function startOrder() {
   }, 100);
 }
 
+function checkCorrectItem(Item, Category) {
+  if (Category === "Crust") {
+    return Item.some((item) => item.name === currentOrder.value.crust);
+  } else if (Category === "Dough") {
+    return Item.some((item) => item.name === "Dough");
+  } else if (Category === "Sauce") {
+    return Item.some((item) => item.name === currentOrder.value.sauce);
+  } else if (Category === "Cheese") {
+    return Item.some((item) => item.name === currentOrder.value.cheese);
+  }
+  return false;
+}
+
 function submitOrder() {
   if (gameOver.value) return;
-  const hasDough = pizza.value.some((item) => item.name === "Dough");
-  const hasCrust = pizza.value.some(
-    (item) => item.name === currentOrder.value.crust
-  );
-  const hasSauce = pizza.value.some(
-    (item) => item.name === currentOrder.value.sauce
-  );
-  const hasCheese = pizza.value.some(
-    (item) => item.name === currentOrder.value.cheese
-  );
+  const hasDough = checkCorrectItem(pizza.value, "Dough");
+  const hasCrust = checkCorrectItem(pizza.value, "Crust");
+  const hasSauce = checkCorrectItem(pizza.value, "Sauce");
+  const hasCheese = checkCorrectItem(pizza.value, "Cheese");
   const correctToppings = currentOrder.value.toppings.every((topping) =>
     pizza.value.some((item) => item.name === topping)
   );
@@ -432,8 +439,24 @@ function submitOrder() {
     failOrder();
   }
   pizza.value = [];
+  boostInventoryRandomly(inventory.value);
   clearInterval(timer);
   startOrder();
+}
+
+function boostInventoryRandomly(items) {
+  const randomDecimals = [0.3, 0.7];
+  items.forEach((item) => {
+    if (item.quantity > 0) return;
+    const randomValue = Math.random();
+    if (
+      randomDecimals.some(
+        (decimal) => Math.floor(randomValue * 10) / 10 === decimal
+      )
+    ) {
+      item.quantity += 1;
+    }
+  });
 }
 
 function failOrder() {
